@@ -1,76 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Snake Game 🐍</title>
-  <style>
-    body {
-      text-align:center;
-      background:black;
-      color:white;
-    }
-
-    canvas {
-      background:white;
-    }
-
-    .controls button {
-      font-size:20px;
-      margin:5px;
-      padding:10px 15px;
-    }
-  </style>
+  <title>Snake Game</title>
 </head>
-
-<body>
+<body style="text-align:center; background:black; color:white;">
 
 <h2>Snake Game 🐍</h2>
-
-<canvas id="c" width="400" height="400"></canvas>
-
-<!-- 📱 Controls -->
-<div class="controls">
-  <br>
-  <button onclick="up()">⬆️</button><br>
-  <button onclick="left()">⬅️</button>
-  <button onclick="down()">⬇️</button>
-  <button onclick="right()">➡️</button>
-</div>
+<canvas id="c" width="400" height="400" style="background:white;"></canvas>
 
 <script>
 let c = document.getElementById("c");
 let ctx = c.getContext("2d");
-
-// images
-let snakeImg = new Image();
-snakeImg.src = "boom.JPG";
-
-let foodImg = new Image();
-foodImg.src = "abhi.JPG";
 
 let snake = [{x:10, y:10}];
 let dx = 1;
 let dy = 0;
 let food = {x:5, y:5};
 
-// keyboard (PC)
 document.addEventListener("keydown", (e)=>{
-  if(e.key=="ArrowUp"){up();}
-  if(e.key=="ArrowDown"){down();}
-  if(e.key=="ArrowLeft"){left();}
-  if(e.key=="ArrowRight"){right();}
+  if(e.key=="ArrowUp"){dx=0;dy=-1;}
+  if(e.key=="ArrowDown"){dx=0;dy=1;}
+  if(e.key=="ArrowLeft"){dx=-1;dy=0;}
+  if(e.key=="ArrowRight"){dx=1;dy=0;}
 });
-
-// 📱 functions
-function up(){ if(dy!=1){dx=0;dy=-1;} }
-function down(){ if(dy!=-1){dx=0;dy=1;} }
-function left(){ if(dx!=1){dx=-1;dy=0;} }
-function right(){ if(dx!=-1){dx=1;dy=0;} }
 
 function game(){
   ctx.clearRect(0,0,400,400);
 
+  // move snake
   let head = {x: snake[0].x + dx, y: snake[0].y + dy};
 
+  // eat food
   if(head.x==food.x && head.y==food.y){
     food = {
       x: Math.floor(Math.random()*20),
@@ -83,14 +43,16 @@ function game(){
   snake.unshift(head);
 
   // draw snake
+  ctx.fillStyle="green";
   snake.forEach(s=>{
-    ctx.drawImage(snakeImg, s.x*20, s.y*20, 20, 20);
+    ctx.fillRect(s.x*20, s.y*20, 20, 20);
   });
 
   // draw food
-  ctx.drawImage(foodImg, food.x*20, food.y*20, 20, 20);
+  ctx.fillStyle="red";
+  ctx.fillRect(food.x*20, food.y*20, 20, 20);
 
-  // collision
+  // wall collision
   if(head.x<0 || head.y<0 || head.x>=20 || head.y>=20){
     alert("Game Over 🎂");
     snake=[{x:10,y:10}];
